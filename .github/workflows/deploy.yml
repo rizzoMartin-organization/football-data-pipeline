@@ -47,7 +47,7 @@ jobs:
     name: Deploy DAGs
     runs-on: self-hosted
     needs: ci
-    if: github.event_name == 'push' || github.evh'
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
 
     steps:
       - name: Checkout repo
