@@ -7,7 +7,7 @@ from pyspark.sql.window import Window
 df_classification = (
   spark.read
   .format("delta")
-  .table("football.silver.standings")
+  .table("silver.standings")
   .drop("ingestion_timestamp","ingestion_date","silver_timestamp","season_id","season_end_date","team_id","team_short_name","team_tla")
   .withColumn("gold_timestamp", current_timestamp())
 )
@@ -16,7 +16,7 @@ df_classification.write.mode("overwrite").format("delta").saveAsTable("football.
 
 # COMMAND ----------
 
-print(f"Gold classification: {df_classification.count()} registros")
+print(f"Gold classification: {df_classification.count()} processed records")
 
 # COMMAND ----------
 
@@ -47,7 +47,7 @@ df_performance.write.mode("overwrite").format("delta").saveAsTable("football.gol
 
 # COMMAND ----------
 
-print(f"Gold performance: {df_performance.count()} registros")
+print(f"Gold performance: {df_performance.count()} processed records")
 
 # COMMAND ----------
 
@@ -64,7 +64,7 @@ df_evolution.write.mode("overwrite").format("delta").saveAsTable("football.gold.
 
 # COMMAND ----------
 
-print(f"Gold evolution: {df_evolution.count()} registros")
+print(f"Gold evolution: {df_evolution.count()} processed records")
 
 # COMMAND ----------
 
@@ -88,4 +88,4 @@ df_ranking.write.mode("overwrite").format("delta").saveAsTable("football.gold.ra
 
 # COMMAND ----------
 
-print(f"Gold ranking scorers: {df_ranking.count()} registros")
+print(f"Gold ranking scorers: {df_ranking.count()} processed records")

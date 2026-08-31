@@ -4,13 +4,13 @@ from pyspark.sql.functions import from_json, col, current_timestamp, explode, co
 
 # COMMAND ----------
 
-df_matches_raw = spark.read.format("delta").table("football.bronze.football_matches")
-df_standings_raw = spark.read.format("delta").table("football.bronze.football_standings")
-df_scorers_raw = spark.read.format("delta").table("football.bronze.football_scorers")
+df_matches_raw = spark.read.format("delta").table("bronze.football_matches")
+df_standings_raw = spark.read.format("delta").table("bronze.football_standings")
+df_scorers_raw = spark.read.format("delta").table("bronze.football_scorers")
 
 # COMMAND ----------
 
-# Schema para matches
+# Matches Schema
 schema_matches = StructType([
     StructField("id", LongType(), False),
     StructField("utcDate", StringType(), False),
@@ -57,7 +57,7 @@ schema_matches = StructType([
 
 # COMMAND ----------
 
-# Schema para standings
+# Standings Schema
 schema_standings = StructType([
     StructField("competition", StructType([
         StructField("code", StringType(), False),
@@ -92,7 +92,7 @@ schema_standings = StructType([
 
 # COMMAND ----------
 
-# Schema para scorers
+# Scorers Schema
 schema_scorers = StructType([
     StructField("competition", StructType([
         StructField("code", StringType(), False),
@@ -248,7 +248,7 @@ df_scorers_silver = (
 
 # Matches
 if not spark.catalog.tableExists("football.silver.matches"):
-    df_matches_silver.write.format("delta").saveAsTable("sfootball.ilver.matches")
+    df_matches_silver.write.format("delta").saveAsTable("football.silver.matches")
 else:
     df_matches_silver.createOrReplaceTempView("matches_silver_temp")
     spark.sql("""
@@ -261,7 +261,7 @@ else:
 
 # COMMAND ----------
 
-print(f"Silver matches: {df_matches_silver.count()} registros procesados")
+print(f"Silver matches: {df_matches_silver.count()} processed records")
 
 # COMMAND ----------
 
@@ -282,7 +282,7 @@ else:
 
 # COMMAND ----------
 
-print(f"Silver standings: {df_standings_silver.count()} registros procesados")
+print(f"Silver standings: {df_standings_silver.count()} processed records")
 
 # COMMAND ----------
 
@@ -303,4 +303,4 @@ else:
 
 # COMMAND ----------
 
-print(f"Silver scorers: {df_scorers_silver.count()} registros procesados")
+print(f"Silver scorers: {df_scorers_silver.count()} processed records")
