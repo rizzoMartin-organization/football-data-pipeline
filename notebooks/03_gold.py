@@ -12,7 +12,7 @@ df_classification = (
   .withColumn("gold_timestamp", current_timestamp())
 )
 
-df_classification.write.mode("overwrite").format("delta").saveAsTable("gold.classification")
+df_classification.write.mode("overwrite").format("delta").saveAsTable("football.gold.classification")
 
 # COMMAND ----------
 
@@ -23,7 +23,7 @@ print(f"Gold classification: {df_classification.count()} processed records")
 df_matches = (
     spark.read
     .format("delta")
-    .table("silver.matches")
+    .table("football.silver.matches")
 )
 
 
@@ -43,7 +43,7 @@ df_performance = (
     .withColumn("gold_timestamp", current_timestamp())
 )
 
-df_performance.write.mode("overwrite").format("delta").saveAsTable("gold.performance_home_away")
+df_performance.write.mode("overwrite").format("delta").saveAsTable("football.gold.performance_home_away")
 
 # COMMAND ----------
 
@@ -60,7 +60,7 @@ df_evolution = (
     .withColumn("gold_timestamp", current_timestamp())
 )
 
-df_evolution.write.mode("overwrite").format("delta").saveAsTable("gold.evolution_goals")
+df_evolution.write.mode("overwrite").format("delta").saveAsTable("football.gold.evolution_goals")
 
 # COMMAND ----------
 
@@ -71,7 +71,7 @@ print(f"Gold evolution: {df_evolution.count()} processed records")
 df_scorers = (
     spark.read
     .format("delta")
-    .table("silver.scorers")
+    .table("football.silver.scorers")
 )
 
 window = Window.partitionBy("competition_code","season_start_date").orderBy(col("goals").desc())
@@ -84,7 +84,7 @@ df_ranking = (
     .withColumn("gold_timestamp", current_timestamp())
 )
 
-df_ranking.write.mode("overwrite").format("delta").saveAsTable("gold.ranking_scorers")
+df_ranking.write.mode("overwrite").format("delta").saveAsTable("football.gold.ranking_scorers")
 
 # COMMAND ----------
 

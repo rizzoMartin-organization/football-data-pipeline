@@ -247,12 +247,12 @@ df_scorers_silver = (
 # COMMAND ----------
 
 # Matches
-if not spark.catalog.tableExists("silver.matches"):
-    df_matches_silver.write.format("delta").saveAsTable("silver.matches")
+if not spark.catalog.tableExists("football.silver.matches"):
+    df_matches_silver.write.format("delta").saveAsTable("football.silver.matches")
 else:
     df_matches_silver.createOrReplaceTempView("matches_silver_temp")
     spark.sql("""
-        MERGE INTO silver.matches AS target
+        MERGE INTO football.silver.matches AS target
         USING matches_silver_temp AS source
         ON target.match_id = source.match_id
         WHEN MATCHED THEN UPDATE SET *
@@ -266,12 +266,12 @@ print(f"Silver matches: {df_matches_silver.count()} processed records")
 # COMMAND ----------
 
 # Standings
-if not spark.catalog.tableExists("silver.standings"):
-    df_standings_silver.write.format("delta").saveAsTable("silver.standings")
+if not spark.catalog.tableExists("football.silver.standings"):
+    df_standings_silver.write.format("delta").saveAsTable("football.silver.standings")
 else:
     df_standings_silver.createOrReplaceTempView("standings_silver_temp")
     spark.sql("""
-        MERGE INTO silver.standings AS target
+        MERGE INTO football.silver.standings AS target
         USING standings_silver_temp AS source
         ON target.team_id = source.team_id
         AND target.season_id = source.season_id
@@ -287,12 +287,12 @@ print(f"Silver standings: {df_standings_silver.count()} processed records")
 # COMMAND ----------
 
 # Scorers
-if not spark.catalog.tableExists("silver.scorers"):
-    df_scorers_silver.write.format("delta").saveAsTable("silver.scorers")
+if not spark.catalog.tableExists("football.silver.scorers"):
+    df_scorers_silver.write.format("delta").saveAsTable("football.silver.scorers")
 else:
     df_scorers_silver.createOrReplaceTempView("scorers_silver_temp")
     spark.sql("""
-        MERGE INTO silver.scorers AS target
+        MERGE INTO football.silver.scorers AS target
         USING scorers_silver_temp AS source
         ON target.player_id = source.player_id
         AND target.season_id = source.season_id

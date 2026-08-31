@@ -75,9 +75,9 @@ df_standings = spark.createDataFrame(standings_json).withColumn("ingestion_times
 
 df_scorers = spark.createDataFrame(scorers_json).withColumn("ingestion_timestamp", current_timestamp()).withColumn("ingestion_date", lit(today_date))
 
-df_matches.write.mode("overwrite").format("delta").saveAsTable("bronze.football_matches")
-df_standings.write.mode("overwrite").format("delta").saveAsTable("bronze.football_standings")
-df_scorers.write.mode("overwrite").format("delta").saveAsTable("bronze.football_scorers")
+df_matches.write.mode("overwrite").format("delta").saveAsTable("football.bronze.football_matches")
+df_standings.write.mode("overwrite").format("delta").saveAsTable("football.bronze.football_standings")
+df_scorers.write.mode("overwrite").format("delta").saveAsTable("football.bronze.football_scorers")
 
 # COMMAND ----------
 
