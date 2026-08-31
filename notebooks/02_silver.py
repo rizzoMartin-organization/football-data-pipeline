@@ -4,13 +4,13 @@ from pyspark.sql.functions import from_json, col, current_timestamp, explode, co
 
 # COMMAND ----------
 
-df_matches_raw = spark.read.format("delta").table("bronze.football_matches")
-df_standings_raw = spark.read.format("delta").table("bronze.football_standings")
-df_scorers_raw = spark.read.format("delta").table("bronze.football_scorers")
+df_matches_raw = spark.read.format("delta").table("football.bronze.football_matches")
+df_standings_raw = spark.read.format("delta").table("football.bronze.football_standings")
+df_scorers_raw = spark.read.format("delta").table("football.bronze.football_scorers")
 
 # COMMAND ----------
 
-# Matches Schema
+# Schema para matches
 schema_matches = StructType([
     StructField("id", LongType(), False),
     StructField("utcDate", StringType(), False),
@@ -57,7 +57,7 @@ schema_matches = StructType([
 
 # COMMAND ----------
 
-# Standings Schema
+# Schema para standings
 schema_standings = StructType([
     StructField("competition", StructType([
         StructField("code", StringType(), False),
@@ -92,7 +92,7 @@ schema_standings = StructType([
 
 # COMMAND ----------
 
-# Scorers Schema
+# Schema para scorers
 schema_scorers = StructType([
     StructField("competition", StructType([
         StructField("code", StringType(), False),
@@ -247,12 +247,12 @@ df_scorers_silver = (
 # COMMAND ----------
 
 # Matches
-if not spark.catalog.tableExists("silver.matches"):
-    df_matches_silver.write.format("delta").saveAsTable("silver.matches")
+if not spark.catalog.tableExists("football.silver.matches"):
+    df_matches_silver.write.format("delta").saveAsTable("sfootball.ilver.matches")
 else:
     df_matches_silver.createOrReplaceTempView("matches_silver_temp")
     spark.sql("""
-        MERGE INTO silver.matches AS target
+        MERGE INTO football.silver.matches AS target
         USING matches_silver_temp AS source
         ON target.match_id = source.match_id
         WHEN MATCHED THEN UPDATE SET *
@@ -261,17 +261,17 @@ else:
 
 # COMMAND ----------
 
-print(f"Silver matches: {df_matches_silver.count()} processed records")
+print(f"Silver matches: {df_matches_silver.count()} registros procesados")
 
 # COMMAND ----------
 
 # Standings
-if not spark.catalog.tableExists("silver.standings"):
-    df_standings_silver.write.format("delta").saveAsTable("silver.standings")
+if not spark.catalog.tableExists("football.silver.standings"):
+    df_standings_silver.write.format("delta").saveAsTable("football.silver.standings")
 else:
     df_standings_silver.createOrReplaceTempView("standings_silver_temp")
     spark.sql("""
-        MERGE INTO silver.standings AS target
+        MERGE INTO football.silver.standings AS target
         USING standings_silver_temp AS source
         ON target.team_id = source.team_id
         AND target.season_id = source.season_id
@@ -282,17 +282,17 @@ else:
 
 # COMMAND ----------
 
-print(f"Silver standings: {df_standings_silver.count()} processed records")
+print(f"Silver standings: {df_standings_silver.count()} registros procesados")
 
 # COMMAND ----------
 
 # Scorers
-if not spark.catalog.tableExists("silver.scorers"):
-    df_scorers_silver.write.format("delta").saveAsTable("silver.scorers")
+if not spark.catalog.tableExists("football.silver.scorers"):
+    df_scorers_silver.write.format("delta").saveAsTable("football.silver.scorers")
 else:
     df_scorers_silver.createOrReplaceTempView("scorers_silver_temp")
     spark.sql("""
-        MERGE INTO silver.scorers AS target
+        MERGE INTO football.silver.scorers AS target
         USING scorers_silver_temp AS source
         ON target.player_id = source.player_id
         AND target.season_id = source.season_id
@@ -303,4 +303,4 @@ else:
 
 # COMMAND ----------
 
-print(f"Silver scorers: {df_scorers_silver.count()} processed records")
+print(f"Silver scorers: {df_scorers_silver.count()} registros procesados")
